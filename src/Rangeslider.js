@@ -252,11 +252,11 @@ class Slider extends Component {
    * @param  {Object} pos - Position object
    * @return {Object} - Slider fill/handle coordinates
    */
-  coordinates = pos => {
+  coordinates = (pos, value2) => {
     const { limit, grab } = this.state
     const { orientation } = this.props
-    const value = this.getValueFromPosition(pos)
-    const position = this.getPositionFromValue(value)
+    // const value = this.getValueFromPosition(pos)
+    const position = this.getPositionFromValue(value2)
     const handlePos = orientation === 'horizontal' ? position + grab : position
     const fillPos = orientation === 'horizontal'
       ? handlePos
@@ -299,7 +299,7 @@ class Slider extends Component {
       ? constants.orientation[orientation].reverseDirection
       : constants.orientation[orientation].direction
     const position = this.getPositionFromValue(value)
-    const coords = this.coordinates(position)
+    const coords = this.coordinates(position, value)
     const fillStyle = { [dimension]: `${coords.fill}px` }
     const handleStyle = { [direction]: `${coords.handle}px` }
     let showTooltip = tooltip && active
