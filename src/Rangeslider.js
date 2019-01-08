@@ -35,6 +35,7 @@ class Slider extends Component {
     orientation: PropTypes.string,
     tooltip: PropTypes.bool,
     reverse: PropTypes.bool,
+    disabled: PropTypes.bool,
     labels: PropTypes.object,
     handleLabel: PropTypes.string,
     tabIndex: PropTypes.number,
@@ -54,7 +55,8 @@ class Slider extends Component {
     reverse: false,
     labels: {},
     handleLabel: '',
-    tabIndex: 0
+    tabIndex: 0,
+    disabled: false
   };
 
   constructor (props, context) {
@@ -303,6 +305,13 @@ class Slider extends Component {
     const fillStyle = { [dimension]: `${coords.fill}px` }
     const handleStyle = { [direction]: `${coords.handle}px` }
     let showTooltip = tooltip && active
+    
+    
+    const handleDrag = (this.props.disabled ? undefined : this.handleDrag)
+    const handleStart = (this.props.disabled ? undefined : this.handleStart)
+    const handleEnd = (this.props.disabled ? undefined : this.handleEnd)
+    const handleKeyDown = (this.props.disabled ? undefined : this.handleKeyDown)
+    
 
     let labelItems = []
     let labelKeys = Object.keys(labels)
@@ -320,9 +329,9 @@ class Slider extends Component {
             key={key}
             className={cx('rangeslider__label-item')}
             data-value={key}
-            onMouseDown={this.handleDrag}
-            onTouchStart={this.handleStart}
-            onTouchEnd={this.handleEnd}
+            onMouseDown={handleDrag}
+            onTouchStart={handleStart}
+            onTouchEnd={handleEnd}
             style={labelStyle}
           >
             {this.props.labels[key]}
@@ -339,13 +348,14 @@ class Slider extends Component {
         className={cx(
           'rangeslider',
           `rangeslider-${orientation}`,
-          { 'rangeslider-reverse': reverse },
+          { 'rangeslider-reverse': reverse,
+            'rangeslider-disabled': this.props.disabled },
           className
         )}
-        onMouseDown={this.handleDrag}
-        onMouseUp={this.handleEnd}
-        onTouchStart={this.handleStart}
-        onTouchEnd={this.handleEnd}
+        onMouseDown={handleDrag}
+        onMouseUp={handleEnd}
+        onTouchStart={handleStart}
+        onTouchEnd={handleEnd}
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
@@ -357,10 +367,10 @@ class Slider extends Component {
             this.handle = sh
           }}
           className='rangeslider__handle'
-          onMouseDown={this.handleStart}
-          onTouchMove={this.handleDrag}
-          onTouchEnd={this.handleEnd}
-          onKeyDown={this.handleKeyDown}
+          onMouseDown={handleStart}
+          onTouchMove={handleDrag}
+          onTouchEnd={handleEnd}
+          onKeyDown={handleKeyDown}
           style={handleStyle}
           tabIndex={tabIndex}
         >
